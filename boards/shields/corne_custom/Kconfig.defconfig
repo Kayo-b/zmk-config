@@ -18,9 +18,6 @@ config ZMK_SPLIT
 
 if ZMK_DISPLAY
 
-config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
-    default y
-
 config ZMK_WIDGET_LAYER_STATUS
     default y
 
@@ -46,5 +43,7 @@ config LV_Z_BITS_PER_PIXEL
     default 1
 
 endif # ZMK_DISPLAY
+
+source "boards/shields/corne_custom/Kconfig"
 
 endif # SHIELD_CORNE_CUSTOM_LEFT || SHIELD_CORNE_CUSTOM_RIGHT
