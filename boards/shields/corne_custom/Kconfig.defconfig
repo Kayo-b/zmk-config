@@ -1,0 +1,50 @@
+# Copyright (c) 2024
+# SPDX-License-Identifier: MIT
+
+if SHIELD_CORNE_CUSTOM_LEFT
+
+config ZMK_KEYBOARD_NAME
+    default "Corne Custom"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif # SHIELD_CORNE_CUSTOM_LEFT
+
+if SHIELD_CORNE_CUSTOM_LEFT || SHIELD_CORNE_CUSTOM_RIGHT
+
+config ZMK_SPLIT
+    default y
+
+if ZMK_DISPLAY
+
+config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+    default y
+
+config ZMK_WIDGET_LAYER_STATUS
+    default y
+
+config ZMK_WIDGET_BATTERY_STATUS
+    default y
+
+config ZMK_WIDGET_OUTPUT_STATUS
+    default y
+
+config ZMK_WIDGET_WPM_STATUS
+    default y
+
+config ZMK_WIDGET_PRESSED_KEY
+    default y
+
+config LV_Z_VDB_SIZE
+    default 64
+
+config LV_Z_MEM_POOL_SIZE
+    default 8192
+
+config LV_Z_BITS_PER_PIXEL
+    default 1
+
+endif # ZMK_DISPLAY
+
+endif # SHIELD_CORNE_CUSTOM_LEFT || SHIELD_CORNE_CUSTOM_RIGHT

@@ -1,0 +1,11 @@
+# Copyright (c) 2024
+# SPDX-License-Identifier: MIT
+
+config SHIELD_CORNE_CUSTOM_LEFT
+    def_bool $(shields_list_contains,corne_custom_left)
+
+config SHIELD_CORNE_CUSTOM_RIGHT  
+    def_bool $(shields_list_contains,corne_custom_right)
+
+config SHIELD_CORNE_CUSTOM_DONGLE
+    def_bool $(shields_list_contains,corne_custom_dongle)
