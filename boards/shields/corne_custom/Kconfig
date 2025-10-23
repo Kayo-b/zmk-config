@@ -1,9 +1,0 @@
-# Copyright (c) 2024
-# SPDX-License-Identifier: MIT
-
-config ZMK_WIDGET_PRESSED_KEY
-    bool "Enable pressed key widget"
-    depends on ZMK_DISPLAY
-    help
-      Enable the pressed key widget that displays currently pressed keys
-      on the OLED display.

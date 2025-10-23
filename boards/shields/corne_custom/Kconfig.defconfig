@@ -31,7 +31,12 @@ config ZMK_WIDGET_WPM_STATUS
     default y
 
 config ZMK_WIDGET_PRESSED_KEY
+    bool "Enable pressed key widget"
+    depends on ZMK_DISPLAY
     default y
+    help
+      Enable the pressed key widget that displays currently pressed keys
+      on the OLED display.
 
 config LV_Z_VDB_SIZE
     default 64
@@ -43,7 +48,5 @@ config LV_Z_BITS_PER_PIXEL
     default 1
 
 endif # ZMK_DISPLAY
-
-source "boards/shields/corne_custom/Kconfig"
 
 endif # SHIELD_CORNE_CUSTOM_LEFT || SHIELD_CORNE_CUSTOM_RIGHT
