@@ -84,29 +84,14 @@ static void set_pressed_key_display(struct zmk_widget_pressed_key *widget,
     if (state.pressed) {
         // Show the pressed key
         const char* key_str = keycode_to_string(state.keycode);
-        lv_label_set_text(widget->key_label, key_str);
-        
-        // Show position if available
-        char pos_text[8];
-        snprintf(pos_text, sizeof(pos_text), "P%d", (int)state.position);
-        lv_label_set_text(widget->position_label, pos_text);
-        
-        // Show timestamp (in ms, last 3 digits)
-        char time_text[8];
-        snprintf(time_text, sizeof(time_text), "%03d", (int)(state.timestamp % 1000));
-        lv_label_set_text(widget->timestamp_label, time_text);
-        
-        // Make visible
-        lv_obj_clear_flag(widget->obj, LV_OBJ_FLAG_HIDDEN);
+        char display_text[16];
+        snprintf(display_text, sizeof(display_text), "KEY: %s", key_str);
+        lv_label_set_text(widget->key_label, display_text);
         
         LOG_DBG("Key pressed: %s at position %d", key_str, (int)state.position);
     } else {
-        // Clear labels but keep widget visible briefly
-        lv_label_set_text(widget->key_label, "---");
-        lv_label_set_text(widget->position_label, "---");
-        lv_label_set_text(widget->timestamp_label, "---");
-        
-        // Could add a timer here to hide after delay if desired
+        // Show ready state when no key is pressed
+        lv_label_set_text(widget->key_label, "READY");
         LOG_DBG("Key released");
     }
 }
@@ -135,41 +120,32 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_pressed_key, struct pressed_key_state,
 ZMK_SUBSCRIPTION(widget_pressed_key, zmk_keycode_state_changed);
 
 int zmk_widget_pressed_key_init(struct zmk_widget_pressed_key *widget, lv_obj_t *parent) {
-    // Create main container - sized for 128x32 display vertical layout
+    // Create main container - simpler sizing for debugging
     widget->obj = lv_obj_create(parent);
-    lv_obj_set_size(widget->obj, 120, 30);  // Leave some margin
+    lv_obj_set_size(widget->obj, 128, 32);  // Full screen size
     lv_obj_set_style_bg_opa(widget->obj, LV_OPA_0, LV_PART_MAIN);  // Transparent background
-    lv_obj_set_style_border_width(widget->obj, 1, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(widget->obj, 2, LV_PART_MAIN);
+    lv_obj_set_style_border_width(widget->obj, 0, LV_PART_MAIN);   // No border for now
+    lv_obj_set_style_pad_all(widget->obj, 0, LV_PART_MAIN);        // No padding
     
-    // Create key label - main key display
+    // Create key label - main key display - use default font for now
     widget->key_label = lv_label_create(widget->obj);
-    lv_label_set_text(widget->key_label, "---");
-    lv_obj_set_style_text_font(widget->key_label, &lv_font_montserrat_14, LV_PART_MAIN);
-    lv_obj_align(widget->key_label, LV_ALIGN_TOP_MID, 0, 0);
+    lv_label_set_text(widget->key_label, "READY");  // Show "READY" initially instead of "---"
+    lv_obj_align(widget->key_label, LV_ALIGN_CENTER, 0, 0);  // Center it
     
-    // Create position label - smaller, on the right
-    widget->position_label = lv_label_create(widget->obj);
-    lv_label_set_text(widget->position_label, "---");
-    lv_obj_set_style_text_font(widget->position_label, &lv_font_montserrat_10, LV_PART_MAIN);
-    lv_obj_align(widget->position_label, LV_ALIGN_BOTTOM_LEFT, 0, 0);
+    // Skip the other labels for now to test basic functionality
+    widget->position_label = NULL;
+    widget->timestamp_label = NULL;
     
-    // Create timestamp label - smaller, on the left
-    widget->timestamp_label = lv_label_create(widget->obj);
-    lv_label_set_text(widget->timestamp_label, "---");
-    lv_obj_set_style_text_font(widget->timestamp_label, &lv_font_montserrat_10, LV_PART_MAIN);
-    lv_obj_align(widget->timestamp_label, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+    // Position the widget to fill the screen
+    lv_obj_align(widget->obj, LV_ALIGN_CENTER, 0, 0);
     
-    // Position the widget on the right side of a 128x32 display
-    lv_obj_align(widget->obj, LV_ALIGN_TOP_RIGHT, -4, 2);
-    
-    // Initially visible (show waiting state)
+    // Make sure it's visible
     lv_obj_clear_flag(widget->obj, LV_OBJ_FLAG_HIDDEN);
     
     sys_slist_append(&widgets, &widget->node);
     widget_pressed_key_init();
     
-    LOG_DBG("Pressed key widget initialized");
+    LOG_DBG("Pressed key widget initialized (simple version)");
     return 0;
 }
 
